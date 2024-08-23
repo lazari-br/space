@@ -5,7 +5,7 @@ namespace App\Services\Pagare;
 use App\Models\User;
 use App\Traits\Curl;
 
-class CreateAccountService
+class PagareAccountService
 {
     use Curl;
 
@@ -15,7 +15,7 @@ class CreateAccountService
         $user = $user->load(['info', 'address']);
         $response = $this->post(env('PAGARE_BASE_URL'). 'onboarding/pixaccount', [
             'Content-Type' => 'application/json',
-            'AccessToken' => PagareAuth::getToken(),
+            'AccessToken' => PagareAuth::getSpaceToken(),
             'UserPassword' => env('PAGARE_PWD')
         ],
             $this->getBody($user, $password)
@@ -23,6 +23,18 @@ class CreateAccountService
 
         return json_decode($response, true);
     }
+
+    public function getBalance(User $user): array
+    {
+        $response = $this->get(env('PAGARE_BASE_URL'). 'digitalaccount/balance', [
+            'Content-Type' => 'application/json',
+            'AccessToken' => PagareAuth::getUserToken($user),
+            'UserPassword' => env('PAGARE_PWD')
+        ]);
+
+        return json_decode($response, true);
+    }
+
     private function getBody(User $user, string $password): array
     {
         return [

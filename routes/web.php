@@ -22,7 +22,7 @@ Route::get('/test', function () {
 
     $user = \App\Models\User::with(['address', 'info'])->first();
 //return $user;
-    $service = app(\App\Services\Pagare\CreateAccountService::class);
+    $service = app(\App\Services\Pagare\PagareAccountService::class);
     return $service->create($user, 'Senha@123');
 
 });

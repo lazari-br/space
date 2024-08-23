@@ -4,15 +4,15 @@ namespace App\Services\Pagare;
 
 use App\Traits\Curl;
 
-class PixTransactionService
+class PagarePixService
 {
     use Curl;
 
-    public function create(string $pixType, string $pixKey, int $value): array
+    public function pay(string $pixType, string $pixKey, int $value): array
     {
         $response = $this->post(env('PAGARE_BASE_URL'). 'pix/payment/pay/key', [
             'Content-Type' => 'application/json',
-            'AccessToken' => PagareAuth::getToken(),
+            'AccessToken' => PagareAuth::getSpaceToken(),
             'UserPassword' => env('PAGARE_PWD')
         ], [
                 'key' => $pixKey,

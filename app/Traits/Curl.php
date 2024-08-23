@@ -7,12 +7,12 @@ use GuzzleHttp\Exception\ClientException;
 
 trait Curl {
 
-    public function client(): Client
+    private function client(): Client
     {
         return new Client();
     }
 
-    public function post(string $endpoint, array $headers = [], array $body = []): string
+    protected function post(string $endpoint, array $headers = [], array $body = []): string
     {
         $options = [
             'headers' => $headers,
@@ -24,7 +24,7 @@ trait Curl {
         return $response->getBody()->getContents();
     }
 
-    public function get(string $endpoint, array $headers = []): string
+    protected function get(string $endpoint, array $headers = []): string
     {
         $response = $this->client()->get($endpoint, $headers);
         return $response->getBody()->getContents();

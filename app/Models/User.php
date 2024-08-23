@@ -21,6 +21,7 @@ class User extends Authenticatable
         'email',
         'password',
         'user_type_id',
+        'profit_rate'
     ];
 
     protected $hidden = [
@@ -51,5 +52,10 @@ class User extends Authenticatable
     public function info(): HasOne
     {
         return $this->hasOne(UserInfo::class);
+    }
+
+    public function bankInfo(): HasOne
+    {
+        return $this->hasOne(UserBankInfo::class);
     }
 }

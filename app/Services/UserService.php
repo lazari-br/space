@@ -4,14 +4,22 @@ namespace App\Services;
 
 use App\Models\User;
 use App\Models\UserAddress;
+use App\Models\UserBankInfo;
 use App\Models\UserInfo;
 use App\Repositories\UserRepository;
 use App\Services\BigDataCorp\GetPersonalDataService;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Str;
 
 class UserService
 {
-    public function __construct(protected UserRepository $userRepository, protected GetPersonalDataService $getPersonalDataService){}
+    public function __construct(
+        protected UserRepository $userRepository,
+        protected GetPersonalDataService $getPersonalDataService,
+        protected UserInfo $userInfoRepository,
+        protected UserBankInfo $userBankInfoRepository,
+        protected UserAddress $userAddressRepository,
+    ) {}
 
     public function store(array $data): User
     {
@@ -67,8 +75,17 @@ class UserService
 
     public function createUserRelations(User $user, array $data): User
     {
-        $user->address = UserAddress::create([
-            'user_id' => $user->id,
+        $user->address = $this->createUserAddress($user->id, $data);
+        $user->info =  $this->createUserInfo($user->id, $data);
+        $user->bankInfo =  $this->createUserBankInfo($user->id, $data);
+
+        return $user;
+    }
+
+    private function createUserAddress(int $userId, array $data): UserAddress
+    {
+        return  $this->userAddressRepository->store([
+            'user_id' => $userId,
             'street' => $data['street'],
             'number' => $data['number'],
             'zipcode' => $data['zipcode'],
@@ -77,9 +94,12 @@ class UserService
             'city' => $data['city'],
             'state' => $data['state'],
         ]);
+    }
 
-        $user->info = UserInfo::create([
-            'user_id' => $user->id,
+    private function createUserInfo(int $userId, array $data): UserInfo
+    {
+        return $this->userInfoRepository->store([
+            'user_id' => $userId,
             'document' => $data['document'],
             'birthday' => $data['birthday'],
             'occupation' => $data['occupation'],
@@ -91,7 +111,16 @@ class UserService
             'birth_local' => $data['birth_local'],
             'gender' => $data['gender'],
         ]);
+    }
 
-        return $user;
+    private function createUserBankInfo(int $userId, array $data): UserInfo
+    {
+        return $this->userBankInfoRepository->store([
+            'user_id' => $userId,
+            'pix_type' => 'email',
+            'pix_key' => "email_{$userId}@mail.com",
+            'pagare_login' => $data['document1'],
+            'pagare_password' => Str::password(8)
+        ]);
     }
 }
