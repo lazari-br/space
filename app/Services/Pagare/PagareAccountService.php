@@ -2,6 +2,7 @@
 
 namespace App\Services\Pagare;
 
+use App\Models\Account;
 use App\Models\User;
 use App\Traits\Curl;
 
@@ -9,56 +10,55 @@ class PagareAccountService
 {
     use Curl;
 
-    public function create(User $user, string $password): array
+    public function create(array $data, string $password): array
     {
 //dump($this->getBody($user, $password));
-        $user = $user->load(['info', 'address']);
         $response = $this->post(env('PAGARE_BASE_URL'). 'onboarding/pixaccount', [
             'Content-Type' => 'application/json',
             'AccessToken' => PagareAuth::getSpaceToken(),
             'UserPassword' => env('PAGARE_PWD')
         ],
-            $this->getBody($user, $password)
+            $this->getBody($data, $password)
         );
 
         return json_decode($response, true);
     }
 
-    public function getBalance(User $user): array
+    public function getBalance(Account $account): array
     {
         $response = $this->get(env('PAGARE_BASE_URL'). 'digitalaccount/balance', [
             'Content-Type' => 'application/json',
-            'AccessToken' => PagareAuth::getUserToken($user),
+            'AccessToken' => PagareAuth::getUserToken($account),
             'UserPassword' => env('PAGARE_PWD')
         ]);
 
         return json_decode($response, true);
     }
 
-    private function getBody(User $user, string $password): array
+    private function getBody(array $data, string $password): array
     {
         return [
-            'name' => $user->name,
-            'email' => $user->email,
+            'name' => $data['name'],
+            'email' => $data['email'],
 
-            'document' => $user->info->document,
-            'birthDate' => $user->info->birthday,
-            'occupation' => $user->info->occupation,
-            'income' => $this->getIncome($user->info->income),
-            'ddd' => $user->info->ddd,
-            'phone' => $user->info->phone,
-            'motherName' => $user->info->motherName,
-            'fatherName' => $user->info->fatherName,
-            'birthLocal' => $user->info->birth_local,
-            'gender' => $user->info->gender,
+            'document' => $data['document'],
+            'birthDate' => $data['birthday'],
+            'occupation' => $data['occupation'],
+            'income' => $this->getIncome($data['income']),
+            'ddd' => $data['ddd'],
+            'phone' => $data['phone'],
+            'motherName' => $data['motherName'],
+            'fatherName' => $data['fatherName'],
+            'birthLocal' => $data['birth_local'],
+            'gender' => $data['gender'],
 
-            'zipCode' => $user->address->zipCode,
-            'street' => $user->address->street,
-            'number' => $user->address->number,
-            'complement' => $user->address->complement,
-            'neighborhood' => $user->address->neighborhood,
-            'city' => $user->address->city,
-            'state' => $user->address->state,
+            'zipCode' => $data['zipCode'],
+            'street' => $data['street'],
+            'number' => $data['number'],
+            'complement' => $data['complement'],
+            'neighborhood' => $data['neighborhood'],
+            'city' => $data['city'],
+            'state' => $data['state'],
 
             'ipSignature' => '',
             'dateTimeSignature' => '', //'2024-08-09T22:16:00Z'
@@ -82,5 +82,11 @@ class PagareAccountService
         }
 
         return $response;
+    }
+
+    public function hasEnoughBalance(Account $account, int $value): bool
+    {
+        $payerBalance = $this->getBalance($account);
+        return ($payerBalance['value'] > $value);
     }
 }

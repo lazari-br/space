@@ -18,7 +18,7 @@ return new class extends Migration
 //            $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->unsignedBigInteger('user_type_id');
-            $table->decimal('income_rate');
+            $table->decimal('income_rate', 4, 3);
             $table->rememberToken();
             $table->timestamps();
             $table->decimal('profit_rate', '4', '3');

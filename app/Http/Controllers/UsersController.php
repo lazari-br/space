@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\GetPersonalDataRequest;
 use App\Http\Requests\UserCreationRequest;
 use App\Http\Requests\UserUpdateRequest;
 use App\Services\UserService;
+use Illuminate\Http\JsonResponse;
 
 class UsersController extends Controller
 {
@@ -14,7 +14,7 @@ class UsersController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): JsonResponse
     {
         return response()->json($this->service->list());
     }
@@ -22,7 +22,7 @@ class UsersController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(UserCreationRequest $request)
+    public function store(UserCreationRequest $request): JsonResponse
     {
         return response()->json($this->service->store($request->toArray()));
     }
@@ -30,7 +30,7 @@ class UsersController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(string $id): JsonResponse
     {
         return response()->json($this->service->show($id));
     }
@@ -38,7 +38,7 @@ class UsersController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UserUpdateRequest $request, string $id)
+    public function update(UserUpdateRequest $request, string $id): JsonResponse
     {
         return response()->json($this->service->update($id, $request->toArray()));
     }
@@ -46,13 +46,8 @@ class UsersController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(string $id): JsonResponse
     {
         //
-    }
-
-    public function getUserData(GetPersonalDataRequest $request)
-    {
-        return response()->json($this->service->getUserData($request->get('cpf')));
     }
 }

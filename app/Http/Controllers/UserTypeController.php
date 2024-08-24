@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\UserTypeRequest;
 use App\Services\UserTypeService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class UserTypeController extends Controller
@@ -13,7 +14,7 @@ class UserTypeController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): JsonResponse
     {
         return response()->json($this->service->list());
     }
@@ -21,7 +22,7 @@ class UserTypeController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(UserTypeRequest $request)
+    public function store(UserTypeRequest $request): JsonResponse
     {
         return response()->json($this->service->store($request->toArray()));
     }
@@ -29,7 +30,7 @@ class UserTypeController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(string $id): JsonResponse
     {
         return response()->json($this->service->show($id));
     }
@@ -37,7 +38,7 @@ class UserTypeController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, string $id): JsonResponse
     {
         //
     }
@@ -45,7 +46,7 @@ class UserTypeController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(string $id): JsonResponse
     {
         //
     }

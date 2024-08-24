@@ -21,7 +21,8 @@ class User extends Authenticatable
         'email',
         'password',
         'user_type_id',
-        'profit_rate'
+        'profit_rate',
+        'account_id'
     ];
 
     protected $hidden = [
@@ -54,8 +55,8 @@ class User extends Authenticatable
         return $this->hasOne(UserInfo::class);
     }
 
-    public function bankInfo(): HasOne
+    public function account(): BelongsTo
     {
-        return $this->hasOne(UserBankInfo::class);
+        return $this->belongsTo(Account::class);
     }
 }

@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\AccountController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\PagareController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\UserTypeController;
 use Illuminate\Support\Facades\Route;
@@ -23,6 +25,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::resource('user-types', UserTypeController::class, ['except' => ['update', 'destroy']]);
 
     Route::post('personal-data', [UsersController::class, 'getUserData']);
-});
 
-Route::middleware('auth:sanctum')->get('test', fn() => 'aooooba');
+    Route::post('create-account', [AccountController::class, 'createAccount']);
+
+    Route::post('pix-webhook', [PagareController::class, 'pixWebhook']);
+});

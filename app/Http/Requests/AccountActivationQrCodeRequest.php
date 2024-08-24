@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class GetPersonalDataRequest extends FormRequest
+class AccountActivationQrCodeRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,7 +22,8 @@ class GetPersonalDataRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'cpf' => ['required', new GetPersonalDataRequest()],
+            'account_id' => 'required|exists:accounts,id',
+            'value' => 'required|integer',
         ];
     }
 }
