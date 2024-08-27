@@ -2,10 +2,11 @@
 
 namespace App\Repositories;
 
+use App\Interfaces\BaseRepositoryInterface;
 use App\Models\Integrations\BigDataCorpLog;
 use Illuminate\Pagination\LengthAwarePaginator;
 
-class BigDataCoroLogRepository implements BaseRepositoryInterface
+class BigDataCorpLogRepository implements BaseRepositoryInterface
 {
     public function paginate($paginate = 10, array $params = [], array|string $with = ''): LengthAwarePaginator
     {

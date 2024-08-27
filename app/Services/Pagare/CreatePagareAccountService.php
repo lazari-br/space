@@ -5,7 +5,6 @@ namespace App\Services\Pagare;
 use App\Models\Account;
 use App\Repositories\AccountRepository;
 use App\Services\BigDataCorp\BigDataCorpService;
-use App\Services\UserService;
 use Illuminate\Support\Str;
 
 class CreatePagareAccountService
@@ -35,6 +34,6 @@ class CreatePagareAccountService
 
     private function createRandomPassword(): string
     {
-        return Str::password();
+        return Str::password(8);
     }
 }

@@ -1,11 +1,9 @@
 <?php
 
-namespace App\Repositories;
+namespace App\Interfaces;
 
-use App\Models\ConsolidatedFreights\ConsolidatedDistanceFreight;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Collection;
 
 interface BaseRepositoryInterface
 {

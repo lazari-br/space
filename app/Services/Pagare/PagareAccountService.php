@@ -12,11 +12,10 @@ class PagareAccountService
 
     public function create(array $data, string $password): array
     {
-//dump($this->getBody($user, $password));
         $response = $this->post(env('PAGARE_BASE_URL'). 'onboarding/pixaccount', [
             'Content-Type' => 'application/json',
             'AccessToken' => PagareAuth::getSpaceToken(),
-            'UserPassword' => env('PAGARE_PWD')
+            'Password' => env('PAGARE_PWD')
         ],
             $this->getBody($data, $password)
         );
@@ -40,19 +39,20 @@ class PagareAccountService
         return [
             'name' => $data['name'],
             'email' => $data['email'],
+            'password' => $password,
 
             'document' => $data['document'],
             'birthDate' => $data['birthday'],
             'occupation' => $data['occupation'],
-            'income' => $this->getIncome($data['income']),
+            'income' => $data['income'] ?? 0,
             'ddd' => $data['ddd'],
             'phone' => $data['phone'],
-            'motherName' => $data['motherName'],
-            'fatherName' => $data['fatherName'],
+            'motherName' => $data['mother_name'] ?? 'desconhecida',
+            'fatherName' => $data['father_name'] ?? 'desconhecido',
             'birthLocal' => $data['birth_local'],
             'gender' => $data['gender'],
 
-            'zipCode' => $data['zipCode'],
+            'zipCode' => $data['zipcode'],
             'street' => $data['street'],
             'number' => $data['number'],
             'complement' => $data['complement'],
@@ -60,28 +60,13 @@ class PagareAccountService
             'city' => $data['city'],
             'state' => $data['state'],
 
-            'ipSignature' => '',
-            'dateTimeSignature' => '', //'2024-08-09T22:16:00Z'
+            'ipSignature' => request()->ip(),
+            'dateTimeSignature' => now()->format('Y-m-d\Th:i\Z'), //'2024-08-09T22:16:00Z'
             'pep' => false,
-
             'acceptTerms' => true,
-            'password' => $password,
             'sendEMail' => false,
             'sendNotification' => false
         ];
-    }
-
-    private function getIncome($income): float
-    {
-        if ($income == '4 A 10 SM') {
-            $response = 6 * 1640;
-        } elseif ($income == '1 A 4 SM') {
-            $response = 2 * 1640;
-        } else {
-            $response = $income;
-        }
-
-        return $response;
     }
 
     public function hasEnoughBalance(Account $account, int $value): bool

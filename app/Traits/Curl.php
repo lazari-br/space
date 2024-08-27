@@ -3,7 +3,6 @@
 namespace App\Traits;
 
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\ClientException;
 
 trait Curl {
 
@@ -20,8 +19,13 @@ trait Curl {
             'http_errors' => false,
         ];
 
-        $response = $this->client()->post($endpoint, $options);
-        return $response->getBody()->getContents();
+        $request = $this->client()->post($endpoint, $options);
+        $response = $request->getBody()->getContents();
+
+        if ($request->getStatusCode() !== 200) {
+            throw new \Exception($response);
+        }
+        return $response;
     }
 
     protected function get(string $endpoint, array $headers = []): string

@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Interfaces\BaseRepositoryInterface;
 use App\Models\BetTableMember;
 use Illuminate\Pagination\LengthAwarePaginator;
 

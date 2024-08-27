@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Interfaces\BaseRepositoryInterface;
 use App\Models\Operation;
 use Illuminate\Pagination\LengthAwarePaginator;
 

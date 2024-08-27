@@ -10,7 +10,7 @@ class Login
     use Curl;
     public static function auth(): array
     {
-        return Cache::remember('big_data_corp_login', 36000, function () {
+        return Cache::remember('big_data_corp_login', 3600, function () {
             $request = (new self)->post(env('BIG_DATA_CORP_BASE_URL'). 'tokens/gerar', [
                 'Accept' => 'application/json',
                 'Content-Type' => 'application/json'
