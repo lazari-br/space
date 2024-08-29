@@ -50,15 +50,15 @@ class PagareAccountService
             'motherName' => $data['mother_name'] ?? 'desconhecida',
             'fatherName' => $data['father_name'] ?? 'desconhecido',
             'birthLocal' => $data['birth_local'],
-            'gender' => $data['gender'],
+            'gender' => $data['gender'] ?? 'M',
 
-            'zipCode' => $data['zipcode'],
-            'street' => $data['street'],
-            'number' => $data['number'],
-            'complement' => $data['complement'],
-            'neighborhood' => $data['neighborhood'],
-            'city' => $data['city'],
-            'state' => $data['state'],
+            'zipCode' => $data['zipcode'] ?? '01000000',
+            'street' => $data['street'] ?? 'Desconhecido',
+            'number' => $data['number'] ?? 'S/N',
+            'complement' => $data['complement'] ?? '-',
+            'neighborhood' => $data['neighborhood'] ?? 'Desconhecido',
+            'city' => $data['city'] ?? 'Desconhecido',
+            'state' => $data['state'] ?? 'Desconhecido',
 
             'ipSignature' => request()->ip(),
             'dateTimeSignature' => now()->format('Y-m-d\Th:i\Z'), //'2024-08-09T22:16:00Z'
