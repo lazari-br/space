@@ -37,15 +37,11 @@ class PagareQRCodeService
             ]
         );
 
-        $responseAsArray = json_decode($response, true);
-        $this->createQrCodeOperation($payer, $value, $responseAsArray);
-
-        return $responseAsArray;
+        return json_decode($response, true);
     }
-
     public function consult(string $qrCode): array
     {
-        $response = $this->post(env('PAGARE_BASE_URL'). 'pix/payment/pay/key', [
+        $response = $this->post(env('PAGARE_BASE_URL'). 'pix/qrcode/consult', [
             'Content-Type' => 'application/json',
             'AccessToken' => PagareAuth::getSpaceToken(),
             'UserPassword' => env('PAGARE_PWD')
@@ -56,16 +52,5 @@ class PagareQRCodeService
         );
 
         return json_decode($response, true);
-    }
-
-    private function createQrCodeOperation(Account $payer, int $value, array $response): void
-    {
-        $this->operationRepository->store([
-            'receiver_account_id' => $payer->id,
-            'operation_type' => 'QR_CODE',
-            'value' => $value,
-            'status' => Operation::PENDING,
-            'pagare_id' => $response['identification'],
-        ]);
     }
 }

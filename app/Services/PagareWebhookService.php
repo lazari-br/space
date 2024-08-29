@@ -6,19 +6,32 @@ use App\Models\Integrations\PagareWebhookLog;
 use App\Models\Operation;
 use App\Repositories\OperationRepository;
 use App\Repositories\PagareWebhookLogRepository;
+use App\Services\Pagare\BalanceService;
+use App\Services\Pagare\PagarePixService;
 
 class PagareWebhookService
 {
     public function __construct(
         protected OperationRepository $operationRepository,
-        protected PagareWebhookLogRepository $logRepository
+        protected PagareWebhookLogRepository $logRepository,
+        protected WhitelistService $whitelistService,
+        protected BalanceService $balanceService,
+        protected PagareFeaturesService $pagareFeaturesService,
     ) {}
+
+    #todo: confirmar body do webhook ($data)
     public function getPixResult(array $data, PagareWebhookLog $log): void
     {
         $operation = $this->findOperation($data['movementId']);
         $this->logRepository->update($log->id, ['model_id' => $operation->id]);
 
-        #todo : atualizar operation de acordo com request da pagare
+        if ($data['success']) {
+            $this->balanceService->updateBalanceFromOperation($operation);
+        }
+
+        if (!$this->whitelistService->isWhitelisted()) {
+            $this->pagareFeaturesService->reverseOperation($operation);
+        }
     }
 
     private function findOperation(string $pagareId): Operation

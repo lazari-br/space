@@ -2,42 +2,68 @@
 
 namespace App\Services\Pagare;
 
-use App\Exceptions\PagareAccountWithoutEnoughBalanceException;
+use App\Models\Account;
 use App\Models\Operation;
+use App\Repositories\AccountRepository;
 use App\Repositories\OperationRepository;
 use App\Traits\Curl;
+use Carbon\Carbon;
 
 class PagarePixService
 {
     use Curl;
 
     public function __construct(
-        protected PagareAccountService $accountService,
-        protected OperationRepository $operationRepository
+        protected OperationRepository $operationRepository,
+        protected AccountRepository $accountRepository,
     ) {}
+
+    public function createPixKey(Account $account): array
+    {
+        $request = $this->post(env('PAGARE_BASE_URL') . 'pix/addressing/create', [
+            'Content-Type' => 'application/json',
+            'AccessToken' => PagareAuth::getUserToken($account),
+            'KeyType' => 'EVP'
+        ]);
+
+        return json_decode($request, true);
+    }
 
     public function pay(Operation $operation): array
     {
-        if ($this->accountService->hasEnoughBalance($operation->payerAccount, $operation->value)) {
-            $response = $this->post(env('PAGARE_BASE_URL') . 'pix/payment/pay/key', [
-                'Content-Type' => 'application/json',
-                'AccessToken' => PagareAuth::getUserToken($operation->payerAccount),
-                'UserPassword' => env('PAGARE_PWD')
-            ], [
-                    'key' => $operation->receiverAccount->pix_key,
-                    'value' => $operation->value,
-                    'keyType' => $operation->receiverAccount->pix_type,
-                    'date' => now()->format('Y-m-d'),
-                    'description' => 'tarefa simples',
-                    'reference' => 'pagamento'
-                ]
-            );
+        $response = $this->post(env('PAGARE_BASE_URL') . 'pix/payment/pay/key', [
+            'Content-Type' => 'application/json',
+            'AccessToken' => PagareAuth::getUserToken($operation->payerAccount),
+            'UserPassword' => $operation->payerAccount->password,
+        ], [
+                'key' => $operation->receiverAccount->pix_key,
+                'value' => $operation->value,
+                'keyType' => $operation->receiverAccount->pix_type,
+                'date' => now()->format('Y-m-d'),
+                'description' => 'pix',
+                'reference' => false
+            ]
+        );
 
-            return json_decode($response, true);
+        return json_decode($response, true);
+    }
 
-        } else {
-            $this->operationRepository->update($operation->id, ['status' => Operation::NOT_ENOUGH_BALANCE]);
-            throw new PagareAccountWithoutEnoughBalanceException("Saldo insuficiente para finalizacao da operacao {$operation->id}");
-        }
+    public function reverse(Operation $operation): array
+    {
+        $response = $this->post(env('PAGARE_BASE_URL') . 'pix/payment/reversal', [
+            'Content-Type' => 'application/json',
+            'AccessToken' => PagareAuth::getUserToken($operation->payerAccount),
+            'EndToEnd' => $operation->payerAccount->password,
+        ], [
+                'key' => $operation->receiverAccount->pix_key,
+                'value' => $operation->value,
+                'keyType' => $operation->receiverAccount->pix_type,
+                'date' => now()->format('Y-m-d'),
+                'description' => 'pix',
+                'reference' => false
+            ]
+        );
+
+        return json_decode($response, true);
     }
 }

@@ -11,6 +11,7 @@ class Account extends Model
     use HasFactory, SoftDeletes;
 
     const PENDING = 'PENDING';
+    const ACTIVE_PIX_KEY = 'ACTIVE_PIX_KEY';
 
     protected $table = 'accounts';
 

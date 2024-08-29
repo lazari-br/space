@@ -17,6 +17,9 @@ return new class extends Migration
             $table->unsignedBigInteger('account_id');
             $table->decimal('account_income_rate', 4, 3);
             $table->timestamps();
+
+            $table->foreign('bet_table_id')->references('id')->on('bet_tables');
+            $table->foreign('account_id')->references('id')->on('accounts');
         });
     }
 

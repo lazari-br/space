@@ -12,6 +12,9 @@ class Operation extends Model
 
     const PENDING = 'PENDING';
     const NOT_ENOUGH_BALANCE = 'NOT_ENOUGH_BALANCE';
+    const PIX_TRANSACTION = 'PIX_TRANSACTION';
+    const ERROR_AT_PAGARE = 'ERROR_AT_PAGARE';
+    const SUCCESS = 'SUCCESS';
 
     protected $table = 'operations';
 

@@ -8,6 +8,7 @@ use App\Repositories\BalanceRepository;
 use App\Repositories\BetTableMemberRepository;
 use App\Repositories\BetTableRepository;
 use App\Repositories\BigDataCorpLogRepository;
+use App\Repositories\CurlLogRepository;
 use App\Repositories\OperationRepository;
 use App\Repositories\PagareWebhookLogRepository;
 use App\Repositories\SplitRepository;
@@ -15,6 +16,7 @@ use App\Repositories\UserAddressRepository;
 use App\Repositories\UserInfoRepository;
 use App\Repositories\UserRepository;
 use App\Repositories\UserTypeRepository;
+use App\Repositories\WhitelistBankRepository;
 use Illuminate\Support\ServiceProvider;
 
 class AppRepositoriesProvider extends ServiceProvider
@@ -36,6 +38,8 @@ class AppRepositoriesProvider extends ServiceProvider
         $this->app->bind(BaseRepositoryInterface::class, UserInfoRepository::class);
         $this->app->bind(BaseRepositoryInterface::class, UserRepository::class);
         $this->app->bind(BaseRepositoryInterface::class, UserTypeRepository::class);
+        $this->app->bind(BaseRepositoryInterface::class, CurlLogRepository::class);
+        $this->app->bind(BaseRepositoryInterface::class, WhitelistBankRepository::class);
     }
 
     /**
