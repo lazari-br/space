@@ -7,7 +7,6 @@ use App\Repositories\AccountRepository;
 use App\Repositories\BalanceRepository;
 use App\Repositories\BetTableMemberRepository;
 use App\Repositories\BetTableRepository;
-use App\Repositories\BigDataCorpLogRepository;
 use App\Repositories\CurlLogRepository;
 use App\Repositories\OperationRepository;
 use App\Repositories\PagareWebhookLogRepository;
@@ -30,7 +29,6 @@ class AppRepositoriesProvider extends ServiceProvider
         $this->app->bind(BaseRepositoryInterface::class, BalanceRepository::class);
         $this->app->bind(BaseRepositoryInterface::class, BetTableMemberRepository::class);
         $this->app->bind(BaseRepositoryInterface::class, BetTableRepository::class);
-        $this->app->bind(BaseRepositoryInterface::class, BigDataCorpLogRepository::class);
         $this->app->bind(BaseRepositoryInterface::class, OperationRepository::class);
         $this->app->bind(BaseRepositoryInterface::class, PagareWebhookLogRepository::class);
         $this->app->bind(BaseRepositoryInterface::class, SplitRepository::class);

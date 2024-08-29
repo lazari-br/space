@@ -3,7 +3,7 @@
 namespace App\Repositories;
 
 use App\Interfaces\BaseRepositoryInterface;
-use App\Models\Integrations\PagareWebhookLog;
+use App\Models\PagareWebhookLog;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 class PagareWebhookLogRepository implements BaseRepositoryInterface

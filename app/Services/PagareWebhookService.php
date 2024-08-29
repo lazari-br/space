@@ -2,12 +2,11 @@
 
 namespace App\Services;
 
-use App\Models\Integrations\PagareWebhookLog;
 use App\Models\Operation;
+use App\Models\PagareWebhookLog;
 use App\Repositories\OperationRepository;
 use App\Repositories\PagareWebhookLogRepository;
 use App\Services\Pagare\BalanceService;
-use App\Services\Pagare\PagarePixService;
 
 class PagareWebhookService
 {

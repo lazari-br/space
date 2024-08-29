@@ -1,28 +1,29 @@
 <?php
 
-namespace App\Models\Integrations;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class BigDataCorpLog extends Model
+class PagareWebhookLog extends Model
 {
     use HasFactory;
 
-    protected $table = 'big_data_corp_logs';
+    protected $table = 'pagare_webhook_logs';
 
     protected $fillable = [
-        'cpf',
-        'response'
+        'url',
+        'model',
+        'model_id',
+        'request'
     ];
 
     protected $casts = [
         'response' => 'array'
     ];
 
-    public function setResponseAttribute($value): void
+    public function setRequestAttribute($value): void
     {
         $this->attributes['response'] = is_array($value) ? json_encode($value) : $value;
     }
-
 }

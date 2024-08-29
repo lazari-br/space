@@ -2,15 +2,12 @@
 
 namespace App\Services\BigDataCorp;
 
-use App\Repositories\BigDataCorpLogRepository;
 use App\Traits\Curl;
 use Illuminate\Support\Facades\Cache;
 
 class BigDataCorpService
 {
     use Curl;
-
-    public function __construct(protected BigDataCorpLogRepository $logRepository) {}
 
     public function getData(string $cpf): array
     {
@@ -33,18 +30,7 @@ class BigDataCorpService
             'q' => "doc{{$cpf}}"
         ]);
 
-        $responseAsArray = json_decode($response, true);
-        $this->log($cpf, $responseAsArray);
-
-        return $responseAsArray;
-    }
-
-    private function log(string $cpf, array $response): void
-    {
-        $this->logRepository->store([
-            'cpf' => $cpf ,
-            'response' => $response
-        ]);
+        return json_decode($response, true);
     }
 
     private function translateData(string $cpf, array $info): array
