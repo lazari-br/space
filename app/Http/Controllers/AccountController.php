@@ -4,24 +4,24 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\AccountActivationQrCodeRequest;
 use App\Http\Requests\CreateAccountRequest;
+use App\Jobs\CreatePagareAccountJob;
 use App\Repositories\AccountRepository;
-use App\Services\Pagare\CreatePagareAccountService;
 use App\Services\Pagare\PagareQRCodeService;
+use App\Services\PagareFeaturesService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 class AccountController extends Controller
 {
     public function __construct(
-        protected CreatePagareAccountService $service,
+        protected PagareFeaturesService $pagareFeaturesService,
         protected PagareQRCodeService $pagareQRCodeService,
         protected AccountRepository $accountRepository
     ) {}
 
     public function createAccount(CreateAccountRequest $request): JsonResponse
     {
-        $account = $this->service->createAccount($request);
-        return response()->json($account);
+        CreatePagareAccountJob::dispatch($request->get('cpf'));
+        return response()->json(['message' => 'sucesso']);
     }
 
     public function createAccountActivationQrCode(AccountActivationQrCodeRequest $request): JsonResponse

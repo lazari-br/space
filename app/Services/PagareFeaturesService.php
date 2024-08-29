@@ -2,16 +2,19 @@
 
 namespace App\Services;
 
+use App\Exceptions\PagareAccountWithoutEnoughBalanceException;
 use App\Models\Account;
 use App\Models\Operation;
 use App\Repositories\AccountRepository;
 use App\Repositories\OperationRepository;
+use App\Services\BigDataCorp\BigDataCorpService;
 use App\Services\Pagare\BalanceService;
 use App\Services\Pagare\PagareAccountService;
 use App\Services\Pagare\PagarePixService;
 use App\Services\Pagare\PagareQRCodeService;
 use App\Services\Pagare\PagareTransferService;
 use Carbon\Carbon;
+use Illuminate\Support\Str;
 
 class PagareFeaturesService
 {
@@ -23,8 +26,27 @@ class PagareFeaturesService
         protected OperationRepository $operationRepository,
         protected PagareAccountService $accountService,
         protected PagareTransferService $pagareTransferService,
-        protected BalanceService $balanceService
+        protected BalanceService $balanceService,
+        protected BigDataCorpService $bigDataCorpService,
+        protected PagareAccountService $pagareAccountService,
     ) {}
+
+    public function createAccount(string $cpf): Account
+    {
+        $password = $this->createRandomPassword();
+        $userData = $this->bigDataCorpService->getData($cpf);
+        $pagareAccount = $this->pagareAccountService->create($userData, $password);
+
+        return $this->accountRepository->store([
+            'name' => $userData['name'],
+            'agency' => $pagareAccount['agencia'],
+            'account' => $pagareAccount['conta'],
+            'login' => $cpf,
+            'password' => $password,
+            'document' => $cpf,
+            'status' => Account::PENDING,
+        ]);
+    }
 
     public function createPixKey(Account $account): void
     {
@@ -66,6 +88,11 @@ class PagareFeaturesService
     {
         $this->pagarePixService->reverse($operation);
         $this->balanceService->updateBalanceFromOperation($operation);
+    }
+
+    private function createRandomPassword(): string
+    {
+        return Str::password(8);
     }
 
     private function createOperation(Account $payerAccount, Account $receiver, int $value): Operation

@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands\Temp;
 
-use App\Services\Pagare\CreatePagareAccountService;
+use App\Services\PagareFeaturesService;
 use Illuminate\Console\Command;
 
 class CreateAThousandAccountsCommand extends Command
@@ -21,7 +21,7 @@ class CreateAThousandAccountsCommand extends Command
      */
     protected $description = 'Command description';
 
-    public function __construct(protected CreatePagareAccountService $pagareAccountService)
+    public function __construct(protected PagareFeaturesService $pagareFeaturesService)
     {
         parent::__construct();
     }
@@ -35,7 +35,7 @@ class CreateAThousandAccountsCommand extends Command
             dump($doc);
 
             try {
-                $this->pagareAccountService->createAccount($doc);
+                $this->pagareFeaturesService->createAccount($doc);
             } catch (\Exception $exception) {
                 dump($doc, $exception->getMessage());
             }
