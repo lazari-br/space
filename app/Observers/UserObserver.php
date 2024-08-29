@@ -10,6 +10,6 @@ class UserObserver
 {
     public function created(User $user): void
     {
-        CreatePagareAccountJob::dispatch($user->info->document);
+        CreatePagareAccountJob::dispatch($user->document);
     }
 }

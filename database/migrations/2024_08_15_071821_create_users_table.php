@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('document');
             $table->string('email')->unique();
 //            $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
@@ -23,6 +24,7 @@ return new class extends Migration
             $table->timestamps();
             $table->decimal('profit_rate', '4', '3');
             $table->foreign('user_type_id')->references('id')->on('user_types');
+            $table->string('external_pix_key');
         });
     }
 

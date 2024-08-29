@@ -18,11 +18,13 @@ class User extends Authenticatable
     CONST GENDERS = ['masc', 'fem'];
     protected $fillable = [
         'name',
+        'document',
         'email',
         'password',
         'user_type_id',
         'profit_rate',
-        'account_id'
+        'account_id',
+        'external_pix_key'
     ];
 
     protected $hidden = [
