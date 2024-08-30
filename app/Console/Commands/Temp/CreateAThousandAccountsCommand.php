@@ -35,7 +35,7 @@ class CreateAThousandAccountsCommand extends Command
             dump($doc);
 
             try {
-                $this->pagareFeaturesService->createAccount($doc);
+                $this->pagareFeaturesService->createAccount($doc, 0.1);
             } catch (\Exception $exception) {
                 dump($doc, $exception->getMessage());
             }

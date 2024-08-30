@@ -15,7 +15,6 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
-    CONST GENDERS = ['masc', 'fem'];
     protected $fillable = [
         'name',
         'document',

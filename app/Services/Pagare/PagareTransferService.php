@@ -2,21 +2,12 @@
 
 namespace App\Services\Pagare;
 
-use App\Models\Account;
 use App\Models\Operation;
-use App\Repositories\AccountRepository;
-use App\Repositories\OperationRepository;
 use App\Traits\Curl;
-use Carbon\Carbon;
 
 class PagareTransferService
 {
     use Curl;
-
-    public function __construct(
-        protected OperationRepository $operationRepository,
-        protected AccountRepository $accountRepository,
-    ) {}
 
     public function transfer(Operation $operation): array
     {

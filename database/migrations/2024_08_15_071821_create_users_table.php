@@ -24,7 +24,7 @@ return new class extends Migration
             $table->timestamps();
             $table->decimal('profit_rate', '4', '3');
             $table->foreign('user_type_id')->references('id')->on('user_types');
-            $table->string('external_pix_key');
+            $table->string('external_pix_key')->nullable();
         });
     }
 

@@ -31,7 +31,7 @@ class PagareFeaturesService
         protected PagareAccountService $pagareAccountService,
     ) {}
 
-    public function createAccount(string $cpf): Account
+    public function createAccount(string $cpf, float $incomeRate): Account
     {
         $password = $this->createRandomPassword();
         $userData = $this->bigDataCorpService->getData($cpf);
@@ -42,6 +42,7 @@ class PagareFeaturesService
             'agency' => $pagareAccount['agencia'],
             'account' => $pagareAccount['conta'],
             'login' => $cpf,
+            'income_rate' => $incomeRate,
             'password' => $password,
             'document' => $cpf,
             'status' => Account::PENDING,

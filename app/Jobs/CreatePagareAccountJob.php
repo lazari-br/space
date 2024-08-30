@@ -17,13 +17,13 @@ class CreatePagareAccountJob implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct(protected string $document) {}
+    public function __construct(protected string $document, protected float $incomeRate) {}
 
     /**
      * Execute the job.
      */
     public function handle(): void
     {
-        app(PagareFeaturesService::class)->createAccount($this->document);
+        app(PagareFeaturesService::class)->createAccount($this->document, $this->incomeRate);
     }
 }
