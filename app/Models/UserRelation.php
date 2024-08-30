@@ -13,6 +13,7 @@ class UserRelation extends Model
 
     protected $fillable = [
         'user_id',
-        'creator_id'
+        'related_user_id',
+        'is_superior'
     ];
 }

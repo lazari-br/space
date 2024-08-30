@@ -14,11 +14,12 @@ return new class extends Migration
         Schema::create('user_relations', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('creator_id');
+            $table->unsignedBigInteger('related_user_id');
+            $table->boolean('is_superior')->default(false);
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('creator_id')->references('id')->on('users');
+            $table->foreign('related_user_id')->references('id')->on('users');
         });
     }
 

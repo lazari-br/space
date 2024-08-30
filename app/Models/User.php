@@ -3,8 +3,10 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Models\Scopes\UserScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -14,6 +16,11 @@ use Laravel\Sanctum\HasApiTokens;
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
+
+    protected static function booted(): void
+    {
+        static::addGlobalScope(new UserScope);
+    }
 
     protected $fillable = [
         'name',
@@ -59,5 +66,10 @@ class User extends Authenticatable
     public function account(): BelongsTo
     {
         return $this->belongsTo(Account::class);
+    }
+
+    public function relatedUsers(): HasMany
+    {
+        return $this->hasMany(UserRelation::class);
     }
 }
