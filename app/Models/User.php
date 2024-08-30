@@ -21,7 +21,7 @@ class User extends Authenticatable
         'email',
         'password',
         'user_type_id',
-        'profit_rate',
+        'income_rate',
         'account_id',
         'external_pix_key'
     ];

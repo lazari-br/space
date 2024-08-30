@@ -22,7 +22,6 @@ return new class extends Migration
             $table->decimal('income_rate', 4, 3);
             $table->rememberToken();
             $table->timestamps();
-            $table->decimal('profit_rate', '4', '3');
             $table->foreign('user_type_id')->references('id')->on('user_types');
             $table->string('external_pix_key')->nullable();
         });
