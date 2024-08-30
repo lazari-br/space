@@ -20,7 +20,7 @@ class AccountController extends Controller
 
     public function createAccount(CreateAccountRequest $request): JsonResponse
     {
-        CreatePagareAccountJob::dispatch($request->get('cpf'));
+        CreatePagareAccountJob::dispatch($request->get('cpf'), $request->get('rates'));
         return response()->json(['message' => 'sucesso']);
     }
 

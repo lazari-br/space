@@ -19,7 +19,6 @@ return new class extends Migration
             $table->string('login');
             $table->string('password');
             $table->string('document');
-            $table->decimal('income_rate', 4, 3);
             $table->string('pix_key')->nullable();
             $table->string('pix_type')->nullable();
             $table->string('status');

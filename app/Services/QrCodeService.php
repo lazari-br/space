@@ -12,8 +12,10 @@ class QrCodeService
 {
     public function __construct(
         protected PagareQRCodeService $qRCodeService,
-        protected PagareAccountService $accountService
+        protected PagareAccountService $accountService,
+        protected PagareFeaturesService $pagareFeaturesService
     ) {}
+
     public function pay(User $payer, string $qrCode)
     {
         $qrCodeInfo = $this->qRCodeService->consult($qrCode);
@@ -22,5 +24,6 @@ class QrCodeService
             throw new PagareAccountWithoutEnoughBalanceException("Saldo {$payerBalance['value']} é insuficiente para o pagamento do valor {$qrCodeInfo['value']}. Erro ocorrido com usuario {$payer->id}");
         }
 
+        $this->pagareFeaturesService->makePixTransaction($payer, );
     }
 }

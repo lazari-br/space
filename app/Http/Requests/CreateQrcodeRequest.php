@@ -2,10 +2,9 @@
 
 namespace App\Http\Requests;
 
-use App\Rules\CpfRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class CreateAccountRequest extends FormRequest
+class CreateQrcodeRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,10 +22,8 @@ class CreateAccountRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'cpf' => ['required', new CpfRule()],
-            'rates' => ['required', 'array'],
-            'rates.*.description' => 'required|string',
-            'rates.*.rate' => 'required|decimal',
+            'account_id' => 'required|exists:accounts,id',
+            'value' => 'required|decimal'
         ];
     }
 }

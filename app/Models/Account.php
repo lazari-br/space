@@ -21,7 +21,6 @@ class Account extends Model
         'account',
         'login',
         'password',
-        'income_rate',
         'document',
         'pix_key',
         'pix_type',

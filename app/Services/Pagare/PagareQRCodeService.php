@@ -13,27 +13,17 @@ class PagareQRCodeService
 
     public function __construct(protected OperationRepository $operationRepository) {}
 
-    public function create(Account $payer, int $value): array
+    public function create(Account $receiver, int $value): array
     {
-        $response = $this->post(env('PAGARE_BASE_URL'). 'pix/payment/pay/key', [
+        $response = $this->post(env('PAGARE_BASE_URL'). 'pix/qrcode/static', [
             'Content-Type' => 'application/json',
             'AccessToken' => PagareAuth::getSpaceToken(),
-            'UserPassword' => env('PAGARE_PWD')
+            'QRCodeType' => 'URLBASE'
         ], [
-                'expirationSeconds' => 0,
-                'validDaysAfterExpiration' => 0,
-                'dueDate' => now()->format('Y-m-d'),
-                'payerDocument' => $payer->document,
-                'payerName' => $payer->name,
                 'value' => $value,
-                'interestValue' => 0,
-                'indentification' => $payer->document,
-                'fineValue' => 0,
-                'discoutValue' => 0,
-                'reductionValue' => 0,
-                'key' => $payer->document,
-                'description' => 'Pagamento de serviços',
-                'reuse' => true
+                'key' => $receiver->pix_key,
+                'description' => 'activation qrcode',
+                'identification' => $receiver->document
             ]
         );
 

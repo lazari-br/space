@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Interfaces\BaseRepositoryInterface;
+use App\Repositories\AccountRateRepository;
 use App\Repositories\AccountRepository;
 use App\Repositories\BalanceRepository;
 use App\Repositories\BetTableMemberRepository;
@@ -38,6 +39,7 @@ class AppRepositoriesProvider extends ServiceProvider
         $this->app->bind(BaseRepositoryInterface::class, UserTypeRepository::class);
         $this->app->bind(BaseRepositoryInterface::class, CurlLogRepository::class);
         $this->app->bind(BaseRepositoryInterface::class, WhitelistBankRepository::class);
+        $this->app->bind(BaseRepositoryInterface::class, AccountRateRepository::class);
     }
 
     /**

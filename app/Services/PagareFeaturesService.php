@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Exceptions\PagareAccountWithoutEnoughBalanceException;
 use App\Models\Account;
 use App\Models\Operation;
+use App\Repositories\AccountRateRepository;
 use App\Repositories\AccountRepository;
 use App\Repositories\OperationRepository;
 use App\Services\BigDataCorp\BigDataCorpService;
@@ -29,24 +30,27 @@ class PagareFeaturesService
         protected BalanceService $balanceService,
         protected BigDataCorpService $bigDataCorpService,
         protected PagareAccountService $pagareAccountService,
+        protected AccountRateRepository $accountRateRepository
     ) {}
 
-    public function createAccount(string $cpf, float $incomeRate): Account
+    public function createAccount(string $cpf, array $rates): Account
     {
         $password = $this->createRandomPassword();
         $userData = $this->bigDataCorpService->getData($cpf);
         $pagareAccount = $this->pagareAccountService->create($userData, $password);
 
-        return $this->accountRepository->store([
+        $account = $this->accountRepository->store([
             'name' => $userData['name'],
             'agency' => $pagareAccount['agencia'],
             'account' => $pagareAccount['conta'],
             'login' => $cpf,
-            'income_rate' => $incomeRate,
             'password' => $password,
             'document' => $cpf,
             'status' => Account::PENDING,
         ]);
+
+        $this->createAccountRates($account, $rates);
+        return $account;
     }
 
     public function createPixKey(Account $account): void
@@ -79,10 +83,15 @@ class PagareFeaturesService
         }
     }
 
-    public function createQrCode(Account $payerAccount, int $value): void
+    public function createQrCode(Account|int $receiver, int $value): array
     {
-        $pagareResponse = $this->pagareQRCodeService->create($payerAccount, $value);
-        $this->createQrCodeOperation($payerAccount, $value, $pagareResponse);
+        if (is_int($receiver)) {
+            $receiver = $this->accountRepository->find($receiver);
+        }
+
+        $pagareResponse = $this->pagareQRCodeService->create($receiver, $value);
+        $this->createQrCodeOperation($receiver, $value, $pagareResponse);
+        return $pagareResponse;
     }
 
     public function reverseOperation(Operation $operation): void
@@ -135,5 +144,14 @@ class PagareFeaturesService
             'status' => Operation::PENDING,
             'pagare_id' => $response['identification'],
         ]);
+    }
+
+    private function createAccountRates(Account $account, array $rates): void
+    {
+        array_map(fn($rate) => $this->accountRateRepository->store([
+            'account_id' => $account->id,
+            'description' => $rate['description'],
+            'rate' => $rate['rate'],
+        ]), $rates);
     }
 }

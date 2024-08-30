@@ -22,11 +22,12 @@ Route::post('login', [LoginController::class, 'login']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::resource('users', UsersController::class, ['except' => ['destroy']]);
-    Route::resource('user-types', UserTypeController::class, ['except' => ['update', 'destroy']]);
+//    Route::resource('user-types', UserTypeController::class, ['except' => ['update', 'destroy']]);
 
-    Route::post('personal-data', [UsersController::class, 'getUserData']);
+//    Route::post('personal-data', [UsersController::class, 'getUserData']);
 
-    Route::post('create-account', [AccountController::class, 'createAccount']);
+    Route::post('account', [AccountController::class, 'createAccount']);
 
     Route::post('pix-webhook', [PagareController::class, 'pixWebhook']);
+    Route::post('qrcode/create', [PagareController::class, 'createQrCode']);
 });
